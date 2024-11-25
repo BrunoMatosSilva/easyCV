@@ -17,18 +17,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body
         className={cn(
           "min-hg-screen bg-background font-sans antialiased", 
           fontTitle.variable, fontSans.variable
         )}
+        suppressHydrationWarning
       >
         <ThemeProvider
         attribute="class"
         defaultTheme="system"
         enableSystem
-        disableTransitionOnChange>
+        disableTransitionOnChange
+        >
           {children}
         </ThemeProvider>
       </body>
