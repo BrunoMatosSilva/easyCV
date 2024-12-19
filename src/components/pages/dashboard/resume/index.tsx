@@ -20,6 +20,33 @@ export const ResumePage = () => {
         website: "",
         phone: "",
         location: "",
+      },
+      summary: "",
+      certifications: [],
+      educations: [],
+      experiences: [],
+      languages: [],
+      projects: [],
+      skills: [],
+      socialMedias: [],
+    },
+    structure: {
+      template: "ditto",
+      colorTheme: "slate",
+      language: "portuguese",
+      layout: {
+        mainSections: [
+          { key: "socialMedias" },
+          { key: "summary" },
+          { key: "experiences" },
+          { key: "educations" },
+          { key: "certifications" },
+          { key: "projects" },
+        ],
+        sidebarSections: [
+          { key: "languages" },
+          { key: "skills" },
+        ]
       }
     }
   }
