@@ -240,7 +240,7 @@ export const ManageMultipleItemDialog = ({ data, open, setOpen, initialData }: M
     defaultValues: {
       name: "",
       username: "",
-      url: "",
+      url: undefined,
       icon: "",
       company: "",
       position: "",
@@ -341,8 +341,6 @@ export const ManageMultipleItemDialog = ({ data, open, setOpen, initialData }: M
 
       return;
     }
-
-    console.log(currentFieldValue)
 
     setValue(`content.${formKey}`, [...currentFieldValue, {...formData, id: uuid()}])
     setOpen(false);
