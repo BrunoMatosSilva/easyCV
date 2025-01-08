@@ -6,12 +6,18 @@ import { db } from "./drizzle";
 import { resumes } from "./schema";
 import { eq } from "drizzle-orm";
 
-export const createResume = async (title: string) => {
+const getUserIdOrThrow = async () => {
   const session = await auth();
   
   const userId = session?.user?.id;
 
   if (!userId) throw Error("Usuário não encontrando.");
+
+  return userId;
+}
+
+export const createResume = async (title: string) => {
+  const userId = await getUserIdOrThrow()
 
   const newResume = await db
   .insert(resumes)
@@ -24,11 +30,7 @@ export const createResume = async (title: string) => {
 }
 
 export const updateResumeData = async (id: string, data: ResumeData) => {
-  const session = await auth();
-  
-  const userId = session?.user?.id;
-
-  if (!userId) throw Error("Usuário não encontrando.");
+  await getUserIdOrThrow()
 
   const updatedResume = await db
   .update(resumes)
@@ -40,4 +42,42 @@ export const updateResumeData = async (id: string, data: ResumeData) => {
 
   return updatedResume[0]
 
+}
+
+export const deleteResume = async (id: string) => {
+  const userId = await getUserIdOrThrow()
+
+  const resume = await db.query.resumes.findFirst({
+    where: eq(resumes.id, id),
+  })
+
+  if (!resume) throw new Error("Currículo não encontrado.");
+  if ( resume.userId !== userId) throw new Error("Usúario não autorizado.")
+
+  await db.delete(resumes).where(eq(resumes.id, id)).execute();
+
+  revalidatePath("/dashboard/resumes");
+}
+
+export const duplicateResume = async (id: string, title:string) => {
+  const userId = await getUserIdOrThrow()
+
+  const resume = await db.query.resumes.findFirst({
+    where: eq(resumes.id, id),
+  })
+
+  if (!resume) throw new Error("Currículo não encontrado.");
+
+  const newResume = await db
+  .insert(resumes)
+  .values({
+    title,
+    userId,
+    data: resume.data
+  })
+  .returning();
+
+  revalidatePath("/dashboard/resumes");
+
+  return newResume[0];
 }

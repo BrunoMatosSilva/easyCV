@@ -2,6 +2,8 @@ import { Button } from "@/src/components/ui/button"
 import { Tooltip } from "@/src/components/ui/tooltip"
 import { Copy, Download, Home, Trash } from "lucide-react"
 import Link from "next/link"
+import { DeleteResumeDialog } from "./delete-resume-dialog"
+import { DuplicateResumeDialog } from "./duplicate-resume-dialog"
 
 type NavigationHeaderProps = {
   title: string;
@@ -29,25 +31,29 @@ export const NavigationHeader = ({ title }: NavigationHeaderProps) => {
       </div>
 
       <div className="flex gap-1">
-        <Tooltip content="Deletar Currículo">
-          <Button
-          variant="secondary"
-          className="h-8 w-8 bg-transparent"
-          size="icon"
-          >
-            <Trash size={18} />
-          </Button>
-        </Tooltip>
-
-        <Tooltip content="Duplicar Currículo">
-          <Button
-          variant="secondary"
-          className="h-8 w-8 bg-transparent"
-          size="icon"
-          >
-            <Copy size={18} />
-          </Button>
-        </Tooltip>
+        <DeleteResumeDialog>
+          <Tooltip content="Deletar Currículo">
+            <Button
+            variant="secondary"
+            className="h-8 w-8 bg-transparent"
+            size="icon"
+            >
+              <Trash size={18} />
+            </Button>
+            </Tooltip>
+        </DeleteResumeDialog>
+        
+        <DuplicateResumeDialog>
+          <Tooltip content="Duplicar Currículo">
+            <Button
+            variant="secondary"
+            className="h-8 w-8 bg-transparent"
+            size="icon"
+            >
+              <Copy size={18} />
+            </Button>
+          </Tooltip>
+        </DuplicateResumeDialog>
 
         <Tooltip content="Baixar PDF">
           <Button
