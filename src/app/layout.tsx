@@ -4,8 +4,8 @@ import "@/src/styles/globals.css";
 import { cn } from "@/src/lib/utils";
 import { setDefaultOptions } from "date-fns"
 import { ptBR } from "date-fns/locale"
-import { ThemeProvider } from "../components/shared/theme-provider";
 import { Toaster } from "../components/ui/sonner";
+import { ClientProviders } from "../components/shared/client-providers";
 
 const fontSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const fontTitle = Nunito({ subsets: ["latin"], variable: "--font-title" });
@@ -30,15 +30,11 @@ export default function RootLayout({
         )}
         suppressHydrationWarning
       >
-        <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
+        <ClientProviders
         >
           {children}
           <Toaster />
-        </ThemeProvider>
+        </ClientProviders>
       </body>
     </html>
   );
