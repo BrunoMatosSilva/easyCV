@@ -65,7 +65,7 @@ export const GenerateFromJobTitle = ({ onClose }: GenerateFromJobTitleProps) => 
         type="submit"
         disabled={formState.isSubmitting}
       >
-        Generate content
+        Generate conteúdo
       </Button>
     </form>
   );

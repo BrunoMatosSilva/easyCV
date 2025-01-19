@@ -46,7 +46,6 @@ export const POST = async (request: Request) => {
     });
 
     const json = completion.choices[0].message.content ?? "";
-    console.log({ json });
 
     if (!isValidJSON(json)) throw new Error("Invalid json");
 
