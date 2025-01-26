@@ -4,32 +4,58 @@ import { BadgeCent, Bot, BriefcaseBusiness, CirclePercent, Languages, PencilLine
 import { GenerationDialog } from "./generation-dialog"
 import { useState } from "react"
 import { set } from "date-fns"
+import { useQuery } from "@tanstack/react-query"
+import { ApiService } from "@/src/services/api"
+import { Skeleton } from "@/src/components/ui/skeleton"
+import { BuyCreditsDialog } from "./buy-credits-dialog"
+import { queryKeys } from "@/src/constants/query-keys"
+import { toast } from "sonner"
 
 export const AIGenerationDropdown = () => {
-  const [generationMode, setGenerationMode] = useState<AIGenerationMode | null>(null)
+  const [generationMode, setGenerationMode] = useState<AIGenerationMode | null>(null);
+  const [showCreditsDialog, setShowCreditsDialog] = useState(false);
+
+  const onAction = (mode: AIGenerationMode) => {
+    if (!credits) {
+      toast.error("Você não tem créditos suficientes para realizar está ação.", {
+        action: {
+          label: "Comprar creditos",
+          onClick: () => setShowCreditsDialog(true),
+        }
+      });
+      return;
+    }
+    setGenerationMode(mode)
+  }
 
   const actions = [
     {
       label: "Comprar créditos",
       icon: CirclePercent,
-      onClick: () => console.log("Comprar créditos")
+      onClick: () => setShowCreditsDialog(true),
     },
     {
       label: "Gerar contéudo para vaga de emprego",
       icon: BriefcaseBusiness,
-      onClick: () => setGenerationMode("JOB_TITLE")
+      onClick: () => onAction("JOB_TITLE")
     },
     {
       label: "Melhorar e corrigir contéudo existente",
       icon: PencilLine,
-      onClick: () => setGenerationMode("FIX_CONTENT")
+      onClick: () => onAction("FIX_CONTENT")
     },
     {
       label: "Traduzir contéudo existente",
       icon: Languages,
-      onClick: () => setGenerationMode("TRANSLATE_CONTENT")
+      onClick: () => onAction("TRANSLATE_CONTENT")
     },
   ]
+
+  const { data: credits, isLoading } = useQuery({
+    queryKey: queryKeys.credits,
+    queryFn: ApiService.getCredits
+  })
+
   return (
     <>
     <DropdownMenu>
@@ -44,7 +70,8 @@ export const AIGenerationDropdown = () => {
         Você possui{" "}
         <strong className="text-foreground inline-flex gap-0.5 items-center">
           <BadgeCent size={14} />
-          20 créditos
+          {isLoading ? <Skeleton className="w-5 h-5" /> : credits}{" "}
+          {credits === 1 ? "crédito" : "créditos"}
         </strong>
         </DropdownMenuLabel>
       <DropdownMenuSeparator />
@@ -54,6 +81,7 @@ export const AIGenerationDropdown = () => {
           key={action.label}
           className="gap-2"
           onClick={action.onClick}
+          disabled={isLoading}
           >
             <action.icon size={18} className="text-muted-foreground" />
             {action.label}
@@ -62,6 +90,12 @@ export const AIGenerationDropdown = () => {
       })}
     </DropdownMenuContent>
     </DropdownMenu>
+
+    <BuyCreditsDialog 
+    open={showCreditsDialog}
+    setOpen={setShowCreditsDialog}
+    />
+
     {!!generationMode && (
       <GenerationDialog
         mode={generationMode}

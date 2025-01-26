@@ -1,11 +1,12 @@
 import { Button } from "@/src/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
 import { ApiService } from "@/src/services/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Controller, useForm, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { languagesOptions } from "../../../structure-sidebar/sections/language";
 import { mergician } from "mergician";
+import { queryKeys } from "@/src/constants/query-keys";
 
 type FormData = {
   language: ResumeLanguages;
@@ -16,35 +17,46 @@ type GenerateTranslationProps = {
 };
 
 export const GenerateTranslation = ({ onClose }: GenerateTranslationProps) => {
-  const { control, formState, handleSubmit } = useForm<FormData>();
+  const { control, formState, handleSubmit, getValues: getFormValue } = useForm<FormData>();
   const { setValue, getValues } = useFormContext<ResumeData>();
 
-  const { mutateAsync: handleGenerate } = useMutation({
+  const queryClient = useQueryClient();
+
+  const { mutate: handleGenerate, isPending } = useMutation({
     mutationFn: ApiService.translateContent,
+    onSuccess: (data) => {
+    const content = getValues("content");
+
+    const generation = JSON.parse(data.data);
+
+    const margedContent = mergician(content, generation) as ResumeContentData;
+
+    const language = getFormValue("language")
+
+    setValue("content", margedContent);
+    setValue("structure.language", language);
+
+    toast.success("Conteúdo gerado com sucesso!");
+
+    queryClient.invalidateQueries({ queryKey: queryKeys.credits })
+
+    onClose();
+    },
   });
 
-  const onSubmit = async (formData: FormData) => {
+  const onSubmit = async(formData: FormData) => {
     const content = getValues("content");
 
     const selectedLanguage = languagesOptions.find(
       (item) => item.value === formData.language
     );
 
-    const data = await handleGenerate({
+    handleGenerate({
       content,
       language: selectedLanguage?.label!,
     });
 
-    const generation = JSON.parse(data.data);
-
-    const margedContent = mergician(content, generation) as ResumeContentData;
-
-    setValue("content", margedContent);
-    setValue("structure.language", formData.language);
-
-    toast.success("Conteúdo gerado com sucesso!");
-
-    onClose();
+    
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -80,7 +92,7 @@ export const GenerateTranslation = ({ onClose }: GenerateTranslationProps) => {
       <Button
         className="w-max ml-auto"
         type="submit"
-        disabled={formState.isSubmitting}
+        disabled={isPending}
       >
         Generate conteúdo
       </Button>
