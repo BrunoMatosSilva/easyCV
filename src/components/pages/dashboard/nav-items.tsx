@@ -1,6 +1,6 @@
 "use client";
 
-import { Newspaper, SquareUser } from "lucide-react"
+import { HelpCircleIcon, Newspaper, SquareUser } from "lucide-react"
 import Link from "next/link"
 import { Button } from "../../ui/button"
 import { cn } from "@/src/lib/utils"
@@ -18,6 +18,11 @@ export const NavItems = () => {
       label: "Configurações de Conta",
       icon: SquareUser,
       path: "/dashboard/account"
+    },
+    {
+      label: "Reporta Problema",
+      icon: HelpCircleIcon,
+      path: "/dashboard/contact"
     },
   ]
 
