@@ -12,6 +12,9 @@ const fontTitle = Nunito({ subsets: ["latin"], variable: "--font-title" });
 
 export const metadata: Metadata = {
   title: "EasyCV",
+  icons: {
+    icon: "/favicon.svg",
+  }
 };
 
 setDefaultOptions({ locale: ptBR })

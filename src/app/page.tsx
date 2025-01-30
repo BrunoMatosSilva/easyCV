@@ -3,6 +3,11 @@ import Logo from "@/src/assets/easycv-logo.svg"
 import Link from "next/link";
 import { Button } from "../components/ui/button";
 import { cn } from "../lib/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  description: "Crie currículos de forma rápida e fácil com nossos modelos gratuitos."
+}
 
 export default function Home() {
   return (
