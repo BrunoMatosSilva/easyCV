@@ -1,5 +1,6 @@
 import { api } from "@/src/lib/axios";
 import type Stripe from "stripe";
+import type { ContactFormData } from "../app/dashboard/(layout)/contact/page";
 
 type ResumeDownloadPayload = {
   html: string;
@@ -66,6 +67,12 @@ const getPortalUrl = async (currentPathname: string) => {
   return data.url;
 }
 
+const sendContact = async (form: ContactFormData) => {
+  const { data } = await api.post("/contact", form )
+
+  return data;
+}
+
 export const ApiService = {
   getResumeUrl,
   generateContentForJob,
@@ -74,5 +81,6 @@ export const ApiService = {
   getCredits,
   getPackages,
   getCheckoutUrl,
-  getPortalUrl
+  getPortalUrl,
+  sendContact
 };

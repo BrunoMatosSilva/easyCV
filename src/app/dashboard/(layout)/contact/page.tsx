@@ -6,9 +6,9 @@ import { Separator } from "@/src/components/ui/separator"
 import { ArrowBigRightDashIcon, HelpCircleIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from 'sonner'
-import { api } from '@/src/lib/axios'
 import { Button } from '@/src/components/ui/button'
-import axios from 'axios'
+import { useMutation } from '@tanstack/react-query'
+import { ApiService } from '@/src/services/api'
 
 const contactFormSchema = z.object({
   name: z.string().min(3).max(100),
@@ -16,7 +16,7 @@ const contactFormSchema = z.object({
   message: z.string().min(1).max(500),
 })
 
-type ContactFormData = z.infer<typeof contactFormSchema>
+export type ContactFormData = z.infer<typeof contactFormSchema>
 
 export default function DashboardContactPage() {
   const {
@@ -28,14 +28,19 @@ export default function DashboardContactPage() {
     resolver: zodResolver(contactFormSchema),
   })
 
-  const onSubmit = async (data: ContactFormData) => {
-    try {
-      await axios.post('/api/contact', data)
+  const { mutate: handleSendFormContact, isPending } = useMutation({
+    mutationFn: ApiService.sendContact,
+    onSuccess: (data) => {
       toast.success('Mensagem enviada com sucesso!')
       reset()
-    } catch (error) {
+    },
+    onError: () => {
       toast.error('Ocorreu um erro ao enviar a mensagem. Tente novamente.')
     }
+  })
+
+  const onSubmit = async (data: ContactFormData) => {
+    handleSendFormContact(data)
   }
 
   return (
@@ -78,7 +83,10 @@ export default function DashboardContactPage() {
           />
 
             <div className="relative w-max mx-auto mt-6">
-              <Button type="submit" disabled={isSubmitting}>
+              <Button 
+              type="submit" 
+              disabled={isSubmitting || isPending}
+              >
                 Enviar
                 <ArrowBigRightDashIcon size={18} />
               </Button>

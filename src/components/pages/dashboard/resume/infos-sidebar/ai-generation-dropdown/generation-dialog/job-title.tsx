@@ -26,7 +26,7 @@ type GenerateFromJobTitleProps = {
 };
 
 export const GenerateFromJobTitle = ({ onClose }: GenerateFromJobTitleProps) => {
-  const { control, formState, handleSubmit } = useForm<FormData>();
+  const { control, handleSubmit } = useForm<FormData>();
   const { setValue } = useFormContext<ResumeData>();
 
   const queryClient = useQueryClient();
