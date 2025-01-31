@@ -29,6 +29,7 @@ export const POST = async (request: Request) => {
           Baseado no JSON abaixo, avalie todos os campos alterando o conteúdo de todos eles, aprimorando o texto para parecer mais claro e profissional, pois será usado em currículos.
           Também corrija erros gramaticais e de concordância, se necessário.
           Mantenha dados pessoais, links, emails, etc. como estão, apenas altere o texto dos campos.
+          Mantendo como prioridade o idioma Portugues nos textos.
       
           **Lembre-se de retornar um JSON válido e bem formatado.**
       
