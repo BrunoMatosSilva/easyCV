@@ -23,7 +23,7 @@ export const POST = async (request: Request) => {
         args: chromium.args,
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
+        headless: chromium.headless === 'true',
       });
     }
 
