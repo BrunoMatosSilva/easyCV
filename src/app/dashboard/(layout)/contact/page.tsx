@@ -47,7 +47,7 @@ export default function DashboardContactPage() {
     <>
       <h1 className="font-title font-bold text-3xl flex items-center gap-2">
         <HelpCircleIcon size={25} className="text-muted-foreground"/>
-        Reporta Problema
+        Reportar Problema
       </h1>
 
       <Separator className="my-6" />
