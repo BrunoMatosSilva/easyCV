@@ -20,7 +20,7 @@ export const NavItems = () => {
       path: "/dashboard/account"
     },
     {
-      label: "Reporta Problema",
+      label: "Reportar Problema",
       icon: HelpCircleIcon,
       path: "/dashboard/contact"
     },
